@@ -87,6 +87,17 @@ formatted as a single column. Ensure no duplicate data, and order by
 the member name. */
 
 
+SELECT DISTINCT CONCAT_WS(' ',Members.firstname, Members.surname) AS name,
+		Booked.name AS court_name
+FROM Members
+JOIN
+	(SELECT Bookings.memid, Bookings.facid, Facilities.name
+		FROM Bookings
+		JOIN Facilities
+		ON Bookings.facid = Facilities.facid
+    	WHERE Facilities.facid IN (0,1)) as Booked
+ON Members.memid = Booked.memid
+ORDER BY name;
 
 /* Q8: Produce a list of bookings on the day of 2012-09-14 which
 will cost the member (or guest) more than $30. Remember that guests have
