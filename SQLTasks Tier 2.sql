@@ -120,6 +120,22 @@ ORDER BY guest_cost DESC;
 
 /* Q9: This time, produce the same result as in Q8, but using a subquery. */
 
+SELECT b2.name, 
+		CONCAT_WS(' ', m.firstname, m.surname) AS name,
+		CASE WHEN m.memid != 0 THEN b2.membercost * b2.slots
+		ELSE b2.guestcost * b2.slots
+		END AS guest_cost
+FROM Members as m
+JOIN
+	(SELECT b.memid, b.starttime, b.facid, f.name, b.slots, f.membercost, f.guestcost
+		FROM Bookings as b
+		JOIN Facilities as f
+		ON b.facid = f.facid
+    	) as b2
+ON m.memid = b2.memid
+WHERE b2.starttime LIKE '2012-09-14%'
+HAVING guest_cost > 30
+ORDER BY guest_cost DESC;
 
 /* PART 2: SQLite
 
