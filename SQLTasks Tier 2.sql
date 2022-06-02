@@ -174,7 +174,15 @@ SELECT DISTINCT f.name, s_guests.guest_sum, s_members.total_mem_sum,
 
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
 
-
+SELECT s1.memid, s1.surname || ',' || s1.firstname as member, 
+        s1.recommendedby, 
+        s2.surname || ',' || s2.firstname as recommender, 
+        s2.memid
+FROM Members as s1
+LEFT JOIN Members as s2
+ON s1.recommendedby = s2.memid
+WHERE s1.recommendedby != ''
+ORDER BY member;
 
 /* Q12: Find the facilities with their usage by member, but not guests */
 
