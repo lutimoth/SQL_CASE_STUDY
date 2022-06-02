@@ -186,6 +186,22 @@ ORDER BY member;
 
 /* Q12: Find the facilities with their usage by member, but not guests */
 
+SELECT sum_by_member.facid, f.name,SUM(member_sum) AS total_mem_sum
+            FROM (
+                SELECT memid,
+                facid,
+                SUM(slots) as member_sum
+                FROM Bookings
+                GROUP BY facid, memid
+                HAVING memid != 0) as sum_by_member
+JOIN Facilities as f
+ON sum_by_member.facid = f.facid
+GROUP BY sum_by_member.facid
 
 /* Q13: Find the facilities usage by month, but not guests */
 
+SELECT b.facid, f.name, strftime('%m',starttime) as month, SUM(slots)
+FROM Bookings as b
+JOIN Facilities as f
+ON f.facid = b.facid
+GROUP BY b.facid, month
